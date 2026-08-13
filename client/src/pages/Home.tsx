@@ -2,7 +2,7 @@
  * Design: 余白のノート — Japanese editorial wellness. Evergreen Ink, paper texture,
  * generous left-aligned whitespace, notebook rules, and gentle motion for self-reflection.
  */
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import {
   ArrowDownRight,
   ArrowLeft,
@@ -40,6 +40,7 @@ type DiagnosisResult = {
 
 type IndependenceBenefit = {
   title: string;
+  titleParts: string[];
   description: string;
   nextStep: string;
 };
@@ -135,31 +136,37 @@ const diagnosisResults: Record<Answer, DiagnosisResult> = {
 const independenceBenefits: IndependenceBenefit[] = [
   {
     title: "誰と働くかを選びやすくなる",
+    titleParts: ["誰と働くかを", "選びやすくなる"],
     description: "組織に決められた人間関係だけでなく、お客さまや仲間、協業相手を自分の価値観に合わせて選びやすくなります。",
     nextStep: "一緒に仕事をしたい人や、届けたい相手を一人思い浮かべる。",
   },
   {
     title: "提供した価値が売上に反映されやすい",
+    titleParts: ["提供した価値が", "売上に反映されやすい"],
     description: "喜ばれたサービスを磨き、価格や届け方を工夫することで、自分の貢献を事業の成長につなげやすくなります。",
     nextStep: "これまで一番喜ばれた支援を、一つ言葉にしてみる。",
   },
   {
     title: "得意分野をそのまま仕事にできる",
+    titleParts: ["得意分野をそのまま", "仕事にできる"],
     description: "自分が深めてきた専門性や経験を軸に、必要としている人へ独自のサービスとして届けられます。",
     nextStep: "人からよく相談されることを、三つ書き出してみる。",
   },
   {
     title: "働く時間や場所を設計できる",
+    titleParts: ["働く時間や場所を", "設計できる"],
     description: "予約枠、休日、オンライン対応などを自分で組み立て、生活に合った働き方をつくりやすくなります。",
     nextStep: "理想の一週間を、勤務時間に縛られず描いてみる。",
   },
   {
     title: "自分の名前で信頼を積み上げられる",
+    titleParts: ["自分の名前で", "信頼を積み上げられる"],
     description: "発信やサービスの実績が自分自身の資産として残り、次の仕事や新しい出会いにつながっていきます。",
     nextStep: "伝えられそうな知識や経験を、一つ発信してみる。",
   },
   {
     title: "収入の可能性を自分で広げられる",
+    titleParts: ["収入の可能性を", "自分で広げられる"],
     description: "サービス設計や価格、提供方法を自分で決められるため、給与体系に限定されない収入の形を育てられます。",
     nextStep: "小さく提供できるサービスと価格を、仮で一つ決めてみる。",
   },
@@ -404,7 +411,7 @@ export default function Home() {
             <div className="section-number">02</div>
             <div>
               <p className="eyebrow">DESIGN YOUR OWN WORK</p>
-              <h2 id="possibilities-title">独立すると、働き方はどう変わる？</h2>
+              <h2 id="possibilities-title">独立すると、<br />働き方はどう変わる？</h2>
               <p>収入だけではない、独立によって広がる働き方の可能性を見てみましょう。</p>
             </div>
           </div>
@@ -425,7 +432,14 @@ export default function Home() {
                 onClick={() => selectBenefit(index)}
               >
                 <span className="possibility-number">0{index + 1}</span>
-                <h3>{benefit.title}</h3>
+                <h3>
+                  {benefit.titleParts.map((part, partIndex) => (
+                    <Fragment key={part}>
+                      <span className="title-phrase">{part}</span>
+                      {partIndex < benefit.titleParts.length - 1 && <wbr />}
+                    </Fragment>
+                  ))}
+                </h3>
                 <p>{benefit.description}</p>
                 <span className="possibility-choice">{selectedBenefitIndex === index ? <><Check size={15} /> 選択中</> : <>これが魅力的 <ArrowRight size={15} /></>}</span>
               </button>

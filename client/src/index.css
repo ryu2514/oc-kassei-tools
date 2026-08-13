@@ -43,6 +43,7 @@
   .hero-copy { max-width:660px; min-width:0; position:relative; z-index:1; }
   .eyebrow { display:flex; align-items:center; gap:.4rem; color:#5d786d; font-size:.66rem; font-weight:700; letter-spacing:.15em; margin:0 0 .8rem; }
   .hero-copy h1, .section-heading h2, .closing-section h2 { font-family:"Zen Old Mincho",serif; font-weight:600; line-height:1.46; letter-spacing:.045em; }
+  .hero-copy h1, .section-heading h2, .possibility-card h3, .sales-model-card h3, .closing-section h2 { text-wrap:balance; line-break:strict; }
   .hero-copy h1 { font-size:clamp(2rem,4vw,4.15rem); margin:0; }
   .hero-lead { color:#587066; font-size:clamp(.92rem,1.2vw,1.04rem); line-height:2; max-width:535px; margin:1.7rem 0 2rem; }
   .hero-actions { display:flex; align-items:center; flex-wrap:wrap; gap:1.35rem; }
@@ -121,6 +122,7 @@
   .possibility-number { color:#c58638; font-family:"Zen Old Mincho",serif; font-size:1.3rem; }
   .possibility-card.is-selected .possibility-number { color:#f0c985; }
   .possibility-card h3 { margin:.8rem 0 .65rem; font-family:"Zen Old Mincho",serif; font-size:1.18rem; font-weight:600; line-height:1.65; letter-spacing:.04em; }
+  .title-phrase { white-space:nowrap; }
   .possibility-card p { margin:0; color:#667c72; font-size:.75rem; line-height:1.85; }
   .possibility-card.is-selected p { color:#c8dacd; }
   .possibility-choice { margin-top:auto; padding-top:1.1rem; display:flex; align-items:center; justify-content:space-between; gap:.5rem; color:#1f5a4d; border-top:1px solid #dfe4da; font-size:.68rem; font-weight:700; }
@@ -180,7 +182,7 @@
   .site-nav { display:none; }
   .hero-section { grid-template-columns:1fr; padding:3.5rem 1.25rem 4rem; gap:2.4rem; }
   .hero-copy h1, .hero-lead { overflow-wrap:anywhere; }
-  .hero-copy h1 { font-size:clamp(1.75rem,8vw,2.1rem); letter-spacing:.015em; }
+  .hero-copy h1 { font-size:1.65rem; line-height:1.55; letter-spacing:.01em; }
   .hero-section:before { top:7%; height:34%; left:0; }
   .hero-visual { min-height:270px; width:calc(100% - 18px); margin-left:18px; border-radius:0 0 0 52px; }
   .tool-intro { display:block; padding:2.15rem 1.25rem; }
@@ -189,8 +191,9 @@
   .intro-tool-list a { padding:.75rem 0 .9rem 1rem; border-left:1px solid rgba(235,246,235,.25); }
   .notebook-section { padding:4.25rem 1.25rem; }
   .notebook-section:before { left:1rem; }
-  .section-heading { grid-template-columns:52px 1fr; gap:.7rem; }
-  .section-number { font-size:1.8rem; }
+  .section-heading { grid-template-columns:1fr; gap:.45rem; }
+  .section-heading h2 { font-size:1.55rem; line-height:1.55; letter-spacing:.02em; }
+  .section-number { font-size:1.55rem; }
   .diagnosis-workspace, .result-card, .possibility-intro, .possibility-grid, .disclaimer { margin-left:0; }
   .diagnosis-workspace { grid-template-columns:1fr; box-shadow:8px 8px 0 rgba(211,224,205,.8); }
   .question-rail { padding:1rem 1.25rem; display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:1rem; }
