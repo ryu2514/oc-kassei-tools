@@ -114,6 +114,7 @@ const diagnosisResults: Record<Answer, DiagnosisResult> = {
 };
 
 const formatYen = (value: number) => `${Math.max(0, Math.round(value)).toLocaleString("ja-JP")} 円`;
+const STANDARD_EXPENSE_RATE = 30;
 
 export default function Home() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -121,7 +122,6 @@ export default function Home() {
   const [diagnosisDone, setDiagnosisDone] = useState(false);
   const [salary, setSalary] = useState("300000");
   const [sales, setSales] = useState("450000");
-  const [expenseRate, setExpenseRate] = useState(30);
   const [simulationDone, setSimulationDone] = useState(false);
 
   const selectedAnswer = answers[currentQuestion];
@@ -142,7 +142,7 @@ export default function Home() {
     const salaryValue = Number(salary.replace(/,/g, "")) || 0;
     const salesValue = Number(sales.replace(/,/g, "")) || 0;
     const takeHomeFromSalary = salaryValue * 0.78;
-    const businessIncome = salesValue * (1 - expenseRate / 100);
+    const businessIncome = salesValue * (1 - STANDARD_EXPENSE_RATE / 100);
     const takeHomeFromBusiness = businessIncome * 0.75 - 45000;
     return {
       salary: takeHomeFromSalary,
@@ -150,7 +150,7 @@ export default function Home() {
       business: takeHomeFromBusiness,
       difference: takeHomeFromBusiness - takeHomeFromSalary,
     };
-  }, [salary, sales, expenseRate]);
+  }, [salary, sales]);
 
   const selectAnswer = (answer: Answer) => {
     const nextAnswers = [...answers];
@@ -320,11 +320,10 @@ export default function Home() {
                 <span>想定する事業の月商 <em>売上</em></span>
                 <div className="currency-input"><input inputMode="numeric" type="text" value={sales} onChange={(event) => setSales(event.target.value.replace(/[^0-9]/g, ""))} aria-label="想定する事業の月商（売上）" /><i>円</i></div>
               </label>
-              <label className="slider-label">
-                <span>経費率 <b>{expenseRate}%</b></span>
-                <input type="range" min="10" max="50" step="1" value={expenseRate} onChange={(event) => setExpenseRate(Number(event.target.value))} aria-label="経費率" />
-                <small><span>10%</span><span>目安 30%</span><span>50%</span></small>
-              </label>
+              <div className="expense-note" role="note">
+                <strong>経費率は30%で計算します</strong>
+                <p>このツールでは、一般的な試算目安として売上の30%を経費に設定しています。実際の経費率は、業種や事業形態によって異なります。</p>
+              </div>
               <button className="solid-button simulation-submit" type="submit"><BarChart3 size={18} /> 手取り目安を比べる</button>
             </form>
 
@@ -353,7 +352,7 @@ export default function Home() {
           </div>
           <aside className="disclaimer" role="note">
             <strong>計算について</strong>
-            <p>勤務の手取りは「月収 × 0.78」、事業は「月商 ×（1 − 経費率）× 0.75 − 45,000円」で試算しています。税金・社会保険料・国民健康保険料は所得、居住地、扶養や控除等によって変わります。これは概算であり、重要な判断や申告の際は税理士・自治体窓口・国税庁等で確認してください。</p>
+            <p>勤務の手取りは「月収 × 0.78」、事業は一般的な試算目安として経費率30%を用い、「月商 × 0.70 × 0.75 − 45,000円」で試算しています。実際の経費率、税金・社会保険料・国民健康保険料は、業種、事業形態、所得、居住地、扶養や控除等によって変わります。これは概算であり、重要な判断や申告の際は税理士・自治体窓口・国税庁等で確認してください。</p>
           </aside>
         </section>
 

@@ -121,9 +121,9 @@
   .currency-input:focus-within { border-color:#1f5a4d; }
   .currency-input input { width:100%; min-width:0; border:0; outline:0; background:transparent; color:#183d33; font-family:"Zen Old Mincho",serif; font-size:1.55rem; font-weight:600; }
   .currency-input i { font-style:normal; color:#6c8176; font-size:.72rem; font-weight:500; }
-  .slider-label b { color:#c58638; font-family:"Zen Old Mincho",serif; font-size:1.1rem; }
-  .slider-label input { accent-color:#1f5a4d; width:100%; }
-  .slider-label small { display:flex; justify-content:space-between; color:#82938a; font-weight:500; font-size:.62rem; }
+  .expense-note { padding:.85rem 1rem; border-left:3px solid #c58638; background:#f4f1e7; color:#60756b; }
+  .expense-note strong { display:block; color:#35594f; font-size:.76rem; margin-bottom:.3rem; }
+  .expense-note p { margin:0; font-size:.66rem; font-weight:500; line-height:1.75; }
   .simulation-submit { margin-top:.45rem; width:100%; }
   .simulation-result { padding:clamp(1.75rem,3.8vw,3rem); background:#1f5a4d; color:#fffdf7; min-height:370px; display:flex; flex-direction:column; justify-content:center; }
   .simulation-result.is-visible { animation:reveal .28s cubic-bezier(.23,1,.32,1) both; }
