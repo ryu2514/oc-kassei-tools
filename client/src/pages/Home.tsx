@@ -8,14 +8,18 @@ import {
   ArrowLeft,
   ArrowRight,
   BookOpen,
+  CalendarDays,
   Check,
   ChevronRight,
   Clipboard,
   Copy,
   Leaf,
   LockKeyhole,
+  MonitorPlay,
   RefreshCw,
   Sparkles,
+  Store,
+  UsersRound,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -38,6 +42,16 @@ type IndependenceBenefit = {
   title: string;
   description: string;
   nextStep: string;
+};
+
+type SalesModel = {
+  id: string;
+  title: string;
+  formula: string;
+  monthlySales: number;
+  description: string;
+  consideration: string;
+  icon: "session" | "member" | "store" | "online";
 };
 
 const questions: Question[] = [
@@ -151,6 +165,48 @@ const independenceBenefits: IndependenceBenefit[] = [
   },
 ];
 
+const salesModels: SalesModel[] = [
+  {
+    id: "session",
+    title: "個人セッション制（対面）",
+    formula: "1回 6,000円 × 週10件 × 4週",
+    monthlySales: 240000,
+    description: "単価と件数が、そのまま売上に結びつく一番イメージしやすい型です。",
+    consideration: "件数を伸ばすには、対応できる時間の確保が鍵になります。",
+    icon: "session",
+  },
+  {
+    id: "member",
+    title: "月謝制の会員サービス",
+    formula: "月謝 8,000円 × 20人",
+    monthlySales: 160000,
+    description: "契約が積み上がるほど、毎月の売上を見通しやすくなる安定型です。",
+    consideration: "立ち上げ初期は、会員を集めるまでに時間がかかります。",
+    icon: "member",
+  },
+  {
+    id: "store",
+    title: "店舗協業（週1回の出張枠）",
+    formula: "1回 15,000円 × 週1回 × 4週",
+    monthlySales: 60000,
+    description: "本業と並行しやすく、小さく始めることができるモデルです。",
+    consideration: "金額は小さくても、最初の一歩としてリスクを抑えられます。",
+    icon: "store",
+  },
+  {
+    id: "online",
+    title: "オンライン講座・教材販売",
+    formula: "教材 19,800円 × 月10本",
+    monthlySales: 198000,
+    description: "集客までに時間はかかりますが、件数が増えたときに広がりやすい型です。",
+    consideration: "対応時間が売上に比例しにくい点が、ほかの型との違いです。",
+    icon: "online",
+  },
+];
+
+const modelIcons = { session: CalendarDays, member: UsersRound, store: Store, online: MonitorPlay };
+const formatYen = (value: number) => `${Math.max(0, Math.round(value)).toLocaleString("ja-JP")} 円`;
+
 export default function Home() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Answer[]>([]);
@@ -222,6 +278,16 @@ export default function Home() {
     }
   };
 
+  const copySalesModel = async (model: SalesModel) => {
+    const text = `気になる事業モデルは「${model.title}」です。\n売上例：${model.formula}＝月商 ${formatYen(model.monthlySales)}\n#セラピストビジネス広場`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast.success("事業モデルをコピーしました", { description: "オープンチャットに貼り付けてシェアできます。" });
+    } catch {
+      toast.message("モデルカードをスクリーンショットしてシェアしてください。");
+    }
+  };
+
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#f7f3eb] text-[#173a32]">
       <header className="site-header">
@@ -235,6 +301,7 @@ export default function Home() {
         <nav className="site-nav" aria-label="ページ内ナビゲーション">
           <a href="#diagnosis">タイプ診断</a>
           <a href="#possibilities">独立の可能性</a>
+          <a href="#business-models">事業モデル</a>
         </nav>
       </header>
 
@@ -263,6 +330,7 @@ export default function Home() {
           <div className="intro-tool-list">
             <a href="#diagnosis"><span>01</span><strong>開業タイプ診断</strong><small>6つの問いで、いまのフェーズを整理する。</small><ChevronRight size={18} /></a>
             <a href="#possibilities"><span>02</span><strong>独立で広がる<br />働き方の可能性</strong><small>一番魅力に感じる変化を見つける。</small><ChevronRight size={18} /></a>
+            <a href="#business-models"><span>03</span><strong>4つの<br />事業モデル例</strong><small>売上の組み立て方を具体的に見る。</small><ChevronRight size={18} /></a>
           </div>
         </section>
 
@@ -384,9 +452,48 @@ export default function Home() {
           </aside>
         </section>
 
+        <section id="business-models" className="business-model-section" aria-labelledby="business-models-title">
+          <div className="section-heading model-heading">
+            <div className="section-number">03</div>
+            <div>
+              <p className="eyebrow">BUILD A BUSINESS MODEL</p>
+              <h2 id="business-models-title">4つの事業モデルから、<br />売上のイメージをつかむ。</h2>
+              <p>ここにある数字は、働き方を具体的に考えるための例です。単価、件数、経費は個人によって異なります。</p>
+            </div>
+          </div>
+
+          <div className="model-equation" aria-label="売上の基本式">
+            <span>売上は、</span><strong>単価</strong><i>×</i><strong>件数</strong><i>×</i><strong>回数</strong><span>の組み合わせで考えられます。</span>
+          </div>
+
+          <div className="sales-model-grid">
+            {salesModels.map((model, index) => {
+              const ModelIcon = modelIcons[model.icon];
+              return (
+                <article className={`sales-model-card model-${model.id}`} key={model.id}>
+                  <div className="model-card-top"><span>MODEL 0{index + 1}</span><ModelIcon size={20} strokeWidth={1.65} /></div>
+                  <h3>{model.title}</h3>
+                  <p className="model-formula">{model.formula}</p>
+                  <div className="monthly-sales"><span>月商イメージ</span><strong>{formatYen(model.monthlySales)}</strong></div>
+                  <p className="model-description">{model.description}</p>
+                  <div className="model-consideration"><span>考えておきたいこと</span><p>{model.consideration}</p></div>
+                  <button className="model-copy-button" type="button" onClick={() => copySalesModel(model)}>
+                    このモデルをコピーする <Copy size={16} />
+                  </button>
+                </article>
+              );
+            })}
+          </div>
+
+          <aside className="model-note" role="note">
+            <div><Sparkles size={17} /><strong>まずは、近い型を一つ選ぶ。</strong></div>
+            <p>いきなり独立する必要はありません。今の仕事を続けながら、週1回の提供や小さな商品づくりから試すこともできます。気になるモデルがあれば、オープンチャットで教えてください。</p>
+          </aside>
+        </section>
+
         <section className="closing-section">
           <div><p className="eyebrow">A SMALL STEP, TOGETHER</p><h2>考えたことを、<br />誰かと話してみる。</h2></div>
-          <p>タイプ診断でも、独立で魅力に感じたことでも。気づいたことがあれば、オープンチャットで気軽にシェアしてください。言葉にすることで、次の一歩が少し具体的になります。</p>
+          <p>タイプ診断でも、独立で魅力に感じたことでも、気になる事業モデルでも。気づいたことがあれば、オープンチャットで気軽にシェアしてください。言葉にすることで、次の一歩が少し具体的になります。</p>
         </section>
       </main>
 

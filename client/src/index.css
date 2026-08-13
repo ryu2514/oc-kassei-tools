@@ -59,7 +59,7 @@
   .hero-visual figcaption span { color:#e6ba78; font-family:"Zen Old Mincho",serif; font-size:1.25rem; margin-right:.4rem; }
   .tool-intro { background:#1d4e43; color:#fbf8f0; padding:clamp(2rem,4vw,3.7rem) clamp(1.25rem,7vw,7.25rem); display:grid; grid-template-columns:.6fr 2fr; gap:2rem; }
   .tool-intro > p { font-size:.68rem; letter-spacing:.16em; font-weight:700; color:#adc5b7; margin:.15rem 0; }
-  .intro-tool-list { display:grid; grid-template-columns:1fr 1fr; }
+  .intro-tool-list { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); }
   .intro-tool-list a { position:relative; display:grid; grid-template-columns:42px 1fr auto; gap:.6rem; padding:.4rem 1.4rem 1.2rem; border-left:1px solid rgba(235,246,235,.25); color:#fffdf7; text-decoration:none; transition:background .18s ease-out; }
   .intro-tool-list a:hover { background:rgba(255,255,255,.06); }
   .intro-tool-list a > span { font-family:"Zen Old Mincho",serif; color:#e6ba78; font-size:1.3rem; grid-row:span 2; }
@@ -126,6 +126,36 @@
   .possibility-choice { margin-top:auto; padding-top:1.1rem; display:flex; align-items:center; justify-content:space-between; gap:.5rem; color:#1f5a4d; border-top:1px solid #dfe4da; font-size:.68rem; font-weight:700; }
   .possibility-card.is-selected .possibility-choice { color:#f0c985; border-color:rgba(255,255,255,.24); }
   .possibility-result { max-width:860px; }
+  .business-model-section { position:relative; overflow:hidden; padding:clamp(4.25rem,8vw,7.5rem) clamp(1.25rem,7vw,7.25rem); background:#f7f3eb; }
+  .business-model-section:before { content:""; position:absolute; top:0; right:7%; height:100%; width:1px; background:rgba(31,90,77,.15); }
+  .business-model-section:after { content:""; position:absolute; right:-5rem; top:10rem; width:25rem; height:25rem; border:1px solid rgba(31,90,77,.08); border-radius:50%; box-shadow:0 0 0 42px rgba(31,90,77,.035),0 0 0 84px rgba(31,90,77,.025); pointer-events:none; }
+  .model-heading { z-index:1; }
+  .model-equation { position:relative; z-index:1; max-width:1040px; margin:clamp(2rem,4vw,3.75rem) 0 0 clamp(0rem,6.7vw,6.8rem); display:flex; align-items:center; flex-wrap:wrap; gap:.55rem; padding:1rem 1.25rem; background:#e1ebdd; color:#49675d; font-size:.82rem; line-height:1.6; border-left:3px solid #c58638; }
+  .model-equation strong { font-family:"Zen Old Mincho",serif; color:#1f5a4d; font-size:1.1rem; }
+  .model-equation i { color:#c58638; font-family:"Zen Old Mincho",serif; font-style:normal; font-size:1.25rem; }
+  .sales-model-grid { position:relative; z-index:1; max-width:1120px; margin:1.35rem 0 0 clamp(0rem,6.7vw,6.8rem); display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1rem; }
+  .sales-model-card { position:relative; overflow:hidden; display:flex; flex-direction:column; min-height:390px; padding:clamp(1.35rem,2.8vw,2.25rem); background:#fffdf8; border:1px solid #d6ddd1; box-shadow:8px 8px 0 rgba(204,218,201,.72); transition:transform .18s cubic-bezier(.23,1,.32,1),box-shadow .18s cubic-bezier(.23,1,.32,1); }
+  .sales-model-card:hover { transform:translateY(-4px); box-shadow:12px 14px 0 rgba(204,218,201,.82); }
+  .sales-model-card:before { content:""; position:absolute; top:0; left:0; width:100%; height:5px; background:#1f5a4d; }
+  .model-member:before { background:#c58638; }
+  .model-store:before { background:#88a890; }
+  .model-online:before { background:#496b8b; }
+  .model-card-top { display:flex; align-items:center; justify-content:space-between; color:#6a7f74; font-size:.6rem; font-weight:700; letter-spacing:.13em; }
+  .model-card-top svg { color:#c58638; }
+  .sales-model-card h3 { font-family:"Zen Old Mincho",serif; font-size:clamp(1.2rem,2vw,1.65rem); line-height:1.55; font-weight:600; letter-spacing:.035em; margin:1.5rem 0 .55rem; }
+  .model-formula { min-height:2.7em; color:#63766d; font-size:.76rem; line-height:1.7; margin:0; }
+  .monthly-sales { margin:1.25rem 0; padding:1rem 0; border-top:1px solid #d8ded4; border-bottom:1px solid #d8ded4; display:flex; align-items:end; justify-content:space-between; gap:1rem; }
+  .monthly-sales span { color:#657a6e; font-size:.65rem; font-weight:700; letter-spacing:.1em; }
+  .monthly-sales strong { color:#1f5a4d; font-family:"Zen Old Mincho",serif; font-size:clamp(1.35rem,2.4vw,2rem); font-weight:600; white-space:nowrap; }
+  .model-description { color:#4d655b; font-size:.78rem; line-height:1.85; margin:0; }
+  .model-consideration { margin-top:auto; padding-top:1.2rem; }
+  .model-consideration span { color:#c58638; font-size:.61rem; font-weight:700; letter-spacing:.11em; }
+  .model-consideration p { color:#61766b; font-size:.71rem; line-height:1.75; margin:.35rem 0 0; }
+  .model-copy-button { width:100%; display:flex; align-items:center; justify-content:space-between; gap:.5rem; margin-top:1rem; padding:.75rem 0 0; border:0; border-top:1px solid #d8ded4; background:transparent; color:#1f5a4d; font-family:inherit; font-size:.72rem; font-weight:700; text-align:left; transition:color .16s ease-out; }
+  .model-copy-button:hover { color:#c58638; }
+  .model-note { position:relative; z-index:1; max-width:1120px; margin:1.5rem 0 0 clamp(0rem,6.7vw,6.8rem); padding:clamp(1.35rem,3vw,2rem); background:#1f5a4d; color:#fffdf7; display:grid; grid-template-columns:.75fr 1.25fr; align-items:center; gap:1.5rem; box-shadow:10px 10px 0 #e8ca96; }
+  .model-note > div { display:flex; align-items:center; gap:.55rem; color:#e9c17f; font-family:"Zen Old Mincho",serif; font-size:1.1rem; line-height:1.5; }
+  .model-note > p { color:#dbe9dc; font-size:.73rem; line-height:1.85; margin:0; }
   .disclaimer { max-width:1060px; margin:1.6rem 0 0 clamp(0rem,6.7vw,6.8rem); padding:1rem 1.15rem; border-left:3px solid #c58638; color:#5f756a; background:rgba(255,253,248,.62); font-size:.68rem; line-height:1.75; }
   .disclaimer strong { display:block; font-size:.7rem; color:#35594f; margin-bottom:.25rem; }
   .disclaimer p { margin:0; }
@@ -173,6 +203,14 @@
   .result-card { padding:2rem 1.35rem; box-shadow:9px 9px 0 #e7be7d; }
   .possibility-grid { grid-template-columns:1fr; }
   .possibility-card { min-height:240px; padding:1.3rem; }
+  .business-model-section { padding:4.25rem 1.25rem; }
+  .business-model-section:before { right:1rem; }
+  .model-equation, .sales-model-grid, .model-note { margin-left:0; }
+  .model-equation { gap:.35rem; padding:1rem; font-size:.74rem; }
+  .sales-model-grid { grid-template-columns:1fr; gap:.8rem; }
+  .sales-model-card { min-height:0; padding:1.35rem 1.15rem; box-shadow:6px 6px 0 rgba(204,218,201,.72); }
+  .sales-model-card h3 { margin-top:1.2rem; }
+  .model-note { display:grid; grid-template-columns:1fr; gap:1rem; padding:1.4rem 1.2rem; box-shadow:7px 7px 0 #e8ca96; }
   .closing-section { display:block; padding:4rem 1.25rem; }
   .closing-section > p { margin-top:1.4rem; }
   .site-footer { padding:1.35rem 1.25rem; display:grid; }
