@@ -7,7 +7,6 @@ import {
   ArrowDownRight,
   ArrowLeft,
   ArrowRight,
-  BarChart3,
   BookOpen,
   Check,
   ChevronRight,
@@ -33,6 +32,12 @@ type DiagnosisResult = {
   description: string;
   nextStep: string;
   accent: string;
+};
+
+type IndependenceBenefit = {
+  title: string;
+  description: string;
+  nextStep: string;
 };
 
 const questions: Question[] = [
@@ -113,16 +118,44 @@ const diagnosisResults: Record<Answer, DiagnosisResult> = {
   },
 };
 
-const formatYen = (value: number) => `${Math.max(0, Math.round(value)).toLocaleString("ja-JP")} 円`;
-const STANDARD_EXPENSE_RATE = 30;
+const independenceBenefits: IndependenceBenefit[] = [
+  {
+    title: "誰と働くかを選びやすくなる",
+    description: "組織に決められた人間関係だけでなく、お客さまや仲間、協業相手を自分の価値観に合わせて選びやすくなります。",
+    nextStep: "一緒に仕事をしたい人や、届けたい相手を一人思い浮かべる。",
+  },
+  {
+    title: "提供した価値が売上に反映されやすい",
+    description: "喜ばれたサービスを磨き、価格や届け方を工夫することで、自分の貢献を事業の成長につなげやすくなります。",
+    nextStep: "これまで一番喜ばれた支援を、一つ言葉にしてみる。",
+  },
+  {
+    title: "得意分野をそのまま仕事にできる",
+    description: "自分が深めてきた専門性や経験を軸に、必要としている人へ独自のサービスとして届けられます。",
+    nextStep: "人からよく相談されることを、三つ書き出してみる。",
+  },
+  {
+    title: "働く時間や場所を設計できる",
+    description: "予約枠、休日、オンライン対応などを自分で組み立て、生活に合った働き方をつくりやすくなります。",
+    nextStep: "理想の一週間を、勤務時間に縛られず描いてみる。",
+  },
+  {
+    title: "自分の名前で信頼を積み上げられる",
+    description: "発信やサービスの実績が自分自身の資産として残り、次の仕事や新しい出会いにつながっていきます。",
+    nextStep: "伝えられそうな知識や経験を、一つ発信してみる。",
+  },
+  {
+    title: "収入の可能性を自分で広げられる",
+    description: "サービス設計や価格、提供方法を自分で決められるため、給与体系に限定されない収入の形を育てられます。",
+    nextStep: "小さく提供できるサービスと価格を、仮で一つ決めてみる。",
+  },
+];
 
 export default function Home() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [diagnosisDone, setDiagnosisDone] = useState(false);
-  const [salary, setSalary] = useState("300000");
-  const [sales, setSales] = useState("450000");
-  const [simulationDone, setSimulationDone] = useState(false);
+  const [selectedBenefitIndex, setSelectedBenefitIndex] = useState<number | null>(null);
 
   const selectedAnswer = answers[currentQuestion];
   const selectedResult = useMemo(() => {
@@ -138,19 +171,7 @@ export default function Home() {
     return diagnosisResults[type];
   }, [answers, diagnosisDone]);
 
-  const simulation = useMemo(() => {
-    const salaryValue = Number(salary.replace(/,/g, "")) || 0;
-    const salesValue = Number(sales.replace(/,/g, "")) || 0;
-    const takeHomeFromSalary = salaryValue * 0.78;
-    const businessIncome = salesValue * (1 - STANDARD_EXPENSE_RATE / 100);
-    const takeHomeFromBusiness = businessIncome * 0.75 - 45000;
-    return {
-      salary: takeHomeFromSalary,
-      income: businessIncome,
-      business: takeHomeFromBusiness,
-      difference: takeHomeFromBusiness - takeHomeFromSalary,
-    };
-  }, [salary, sales]);
+  const selectedBenefit = selectedBenefitIndex === null ? null : independenceBenefits[selectedBenefitIndex];
 
   const selectAnswer = (answer: Answer) => {
     const nextAnswers = [...answers];
@@ -185,9 +206,20 @@ export default function Home() {
     }
   };
 
-  const runSimulation = () => {
-    setSimulationDone(true);
-    window.setTimeout(() => document.getElementById("simulation-result")?.scrollIntoView({ behavior: "smooth", block: "center" }), 40);
+  const selectBenefit = (index: number) => {
+    setSelectedBenefitIndex(index);
+    window.setTimeout(() => document.getElementById("possibility-result")?.scrollIntoView({ behavior: "smooth", block: "center" }), 40);
+  };
+
+  const copyBenefit = async () => {
+    if (!selectedBenefit) return;
+    const text = `独立で一番魅力に感じることは「${selectedBenefit.title}」です。\n最初の一歩：${selectedBenefit.nextStep}\n#セラピストビジネス広場`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast.success("結果をコピーしました", { description: "オープンチャットに貼り付けてシェアできます。" });
+    } catch {
+      toast.message("結果カードをスクリーンショットしてシェアしてください。");
+    }
   };
 
   return (
@@ -202,7 +234,7 @@ export default function Home() {
         </a>
         <nav className="site-nav" aria-label="ページ内ナビゲーション">
           <a href="#diagnosis">タイプ診断</a>
-          <a href="#simulator">手取り比較</a>
+          <a href="#possibilities">独立の可能性</a>
         </nav>
       </header>
 
@@ -210,8 +242,8 @@ export default function Home() {
         <section className="hero-section" aria-labelledby="hero-title">
           <div className="hero-copy">
             <p className="eyebrow"><Leaf size={15} strokeWidth={2.2} /> SELF-REFLECTION TOOLS</p>
-            <h1 id="hero-title">働き方の「次の一歩」を、<br />言葉と数字で整理する。</h1>
-            <p className="hero-lead">独立・副業を考えるセラピストのための、小さなワークスペースです。診断と試算は、すべてこの画面の中だけで完結します。</p>
+            <h1 id="hero-title">働き方の「次の一歩」を、<br />自分らしく描いてみる。</h1>
+            <p className="hero-lead">独立・副業を考えるセラピストのための、小さなワークスペースです。いまの自分を知り、独立で広がる可能性を見つけてみましょう。</p>
             <div className="hero-actions">
               <a className="primary-link" href="#diagnosis">まずタイプを知る <ArrowDownRight size={18} /></a>
               <span className="privacy-note"><LockKeyhole size={15} /> 入力内容は保存しません</span>
@@ -230,7 +262,7 @@ export default function Home() {
           <p>CHOOSE A TOOL</p>
           <div className="intro-tool-list">
             <a href="#diagnosis"><span>01</span><strong>開業タイプ診断</strong><small>6つの問いで、いまのフェーズを整理する。</small><ChevronRight size={18} /></a>
-            <a href="#simulator"><span>02</span><strong>勤務 vs 事業<br />手取り比較</strong><small>月収と月商を、手取り目安で見てみる。</small><ChevronRight size={18} /></a>
+            <a href="#possibilities"><span>02</span><strong>独立で広がる<br />働き方の可能性</strong><small>一番魅力に感じる変化を見つける。</small><ChevronRight size={18} /></a>
           </div>
         </section>
 
@@ -299,66 +331,62 @@ export default function Home() {
           )}
         </section>
 
-        <section id="simulator" className="notebook-section simulator-section" aria-labelledby="simulator-title">
+        <section id="possibilities" className="notebook-section possibility-section" aria-labelledby="possibilities-title">
           <div className="section-heading">
             <div className="section-number">02</div>
             <div>
-              <p className="eyebrow">INCOME PERSPECTIVE</p>
-              <h2 id="simulator-title">勤務 vs 事業、手取り比較</h2>
-              <p>額面ではなく、毎月の手取り目安で働き方を見比べてみましょう。</p>
+              <p className="eyebrow">DESIGN YOUR OWN WORK</p>
+              <h2 id="possibilities-title">独立すると、働き方はどう変わる？</h2>
+              <p>収入だけではない、独立によって広がる働き方の可能性を見てみましょう。</p>
             </div>
           </div>
 
-          <div className="simulator-layout">
-            <form className="sim-inputs" onSubmit={(event) => { event.preventDefault(); runSimulation(); }}>
-              <div className="input-label"><span>INPUTS</span><LockKeyhole size={15} /> ブラウザ内だけで計算します</div>
-              <label>
-                <span>現在の勤務月収 <em>額面</em></span>
-                <div className="currency-input"><input inputMode="numeric" type="text" value={salary} onChange={(event) => setSalary(event.target.value.replace(/[^0-9]/g, ""))} aria-label="現在の勤務月収（額面）" /><i>円</i></div>
-              </label>
-              <label>
-                <span>想定する事業の月商 <em>売上</em></span>
-                <div className="currency-input"><input inputMode="numeric" type="text" value={sales} onChange={(event) => setSales(event.target.value.replace(/[^0-9]/g, ""))} aria-label="想定する事業の月商（売上）" /><i>円</i></div>
-              </label>
-              <div className="expense-note" role="note">
-                <strong>経費率は30%で計算します</strong>
-                <p>このツールでは、一般的な試算目安として売上の30%を経費に設定しています。実際の経費率は、業種や事業形態によって異なります。</p>
+          <div className="possibility-intro">
+            <Sparkles size={20} aria-hidden="true" />
+            <p>独立の魅力は、収入だけではありません。あなたが一番魅力に感じる変化を、一つ選んでみてください。</p>
+          </div>
+
+          <div className="possibility-grid" role="radiogroup" aria-label="独立で一番魅力に感じること">
+            {independenceBenefits.map((benefit, index) => (
+              <button
+                className={`possibility-card ${selectedBenefitIndex === index ? "is-selected" : ""}`}
+                key={benefit.title}
+                type="button"
+                role="radio"
+                aria-checked={selectedBenefitIndex === index}
+                onClick={() => selectBenefit(index)}
+              >
+                <span className="possibility-number">0{index + 1}</span>
+                <h3>{benefit.title}</h3>
+                <p>{benefit.description}</p>
+                <span className="possibility-choice">{selectedBenefitIndex === index ? <><Check size={15} /> 選択中</> : <>これが魅力的 <ArrowRight size={15} /></>}</span>
+              </button>
+            ))}
+          </div>
+
+          {selectedBenefit && (
+            <div id="possibility-result" className="result-card possibility-result" aria-live="polite">
+              <div className="result-card-topline"><Sparkles size={18} /> YOUR IDEAL WORK STYLE</div>
+              <p className="result-eyebrow">YOU CHOSE</p>
+              <h3>{selectedBenefit.title}</h3>
+              <p className="result-description">{selectedBenefit.description}</p>
+              <div className="next-step"><span>今日からできる小さな一歩</span><strong>{selectedBenefit.nextStep}</strong></div>
+              <div className="result-card-actions">
+                <button className="solid-button" type="button" onClick={copyBenefit}><Copy size={17} /> 結果をコピーする</button>
               </div>
-              <button className="solid-button simulation-submit" type="submit"><BarChart3 size={18} /> 手取り目安を比べる</button>
-            </form>
-
-            <div id="simulation-result" className={`simulation-result ${simulationDone ? "is-visible" : ""}`} aria-live="polite">
-              {simulationDone ? (
-                <>
-                  <div className="comparison-heading"><span>ESTIMATED TAKE-HOME</span><strong>月ごとの手取り目安</strong></div>
-                  <div className="take-home-row salary-row">
-                    <div><span>勤務の場合</span><small>月収 × 78%</small></div>
-                    <strong>{formatYen(simulation.salary)}</strong>
-                  </div>
-                  <div className="take-home-row business-row">
-                    <div><span>事業の場合</span><small>所得 {formatYen(simulation.income)} を基準</small></div>
-                    <strong>{formatYen(simulation.business)}</strong>
-                  </div>
-                  <div className={`difference-card ${simulation.difference >= 0 ? "is-positive" : "is-negative"}`}>
-                    <span>{simulation.difference >= 0 ? "事業の方が多い目安" : "勤務の方が多い目安"}</span>
-                    <strong>{formatYen(Math.abs(simulation.difference))}</strong>
-                  </div>
-                  <p className="share-caption"><Clipboard size={15} /> 数字が意外だったら、オープンチャットで話してみましょう。</p>
-                </>
-              ) : (
-                <div className="simulation-placeholder"><BookOpen size={30} /><p>左の数字を入力して、<br />手取りの目安を見比べましょう。</p></div>
-              )}
+              <p className="share-caption"><Clipboard size={15} /> 一番魅力に感じたことを、オープンチャットで教えてください。</p>
             </div>
-          </div>
+          )}
+
           <aside className="disclaimer" role="note">
-            <strong>計算について</strong>
-            <p>勤務の手取りは「月収 × 0.78」、事業は一般的な試算目安として経費率30%を用い、「月商 × 0.70 × 0.75 − 45,000円」で試算しています。実際の経費率、税金・社会保険料・国民健康保険料は、業種、事業形態、所得、居住地、扶養や控除等によって変わります。これは概算であり、重要な判断や申告の際は税理士・自治体窓口・国税庁等で確認してください。</p>
+            <strong>いきなり退職する必要はありません</strong>
+            <p>独立には、集客や収入の変動など自分で向き合う課題もあります。まずは今の仕事を続けながら、副業や小さなサービス提供で試すこともできます。</p>
           </aside>
         </section>
 
         <section className="closing-section">
           <div><p className="eyebrow">A SMALL STEP, TOGETHER</p><h2>考えたことを、<br />誰かと話してみる。</h2></div>
-          <p>タイプ診断でも、手取り比較でも。気づいたことがあれば、オープンチャットで気軽にシェアしてください。言葉にすることで、次の一歩が少し具体的になります。</p>
+          <p>タイプ診断でも、独立で魅力に感じたことでも。気づいたことがあれば、オープンチャットで気軽にシェアしてください。言葉にすることで、次の一歩が少し具体的になります。</p>
         </section>
       </main>
 
